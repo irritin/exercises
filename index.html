@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicativo y subjuntivo — práctica</title>
+<style>
+:root{--ink:#243044;--muted:#667085;--line:#dce3eb;--paper:#fff;--bg:#f3f6fa;--accent:#3859a8;--good:#18794e;--bad:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:980px;margin:28px auto;padding:0 18px 40px}
+header{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
+h1{font-size:clamp(23px,4vw,32px);margin:0 0 6px}header p{margin:0;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+button{border:0;border-radius:10px;padding:11px 17px;font-weight:650;font-size:15px;cursor:pointer}
+.primary{background:var(--accent);color:white}.secondary{background:#e8edf5;color:var(--ink)}
+#score{align-self:center;color:var(--muted);font-weight:650}
+.group{background:white;border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin:16px 0}
+.group h2{font-size:18px;margin:0 0 12px}
+.item{padding:12px 0;border-bottom:1px solid #edf0f4}
+.item:last-child{border-bottom:0}.num{font-weight:750;color:var(--accent);margin-right:7px}
+.blank{display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;vertical-align:baseline}
+input{width:126px;max-width:42vw;border:0;border-bottom:2px solid #9aa8ba;border-radius:0;padding:3px 5px;background:#f8fafc;color:var(--ink);font:inherit;text-align:center;outline:none}
+input:focus{border-color:var(--accent);background:#eef3ff}
+input.correct{border-color:var(--good);background:#e9f7ef}
+input.incorrect{border-color:var(--bad);background:#fff0ef}
+.hint{font-size:13px;color:var(--muted);white-space:nowrap}
+.feedback{font-size:13px;margin-left:5px;font-weight:650}
+.feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.special{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:14px 0 18px}.special strong{font-size:13px;color:var(--muted);margin-right:4px}.special button{padding:5px 10px;min-width:34px;background:#eef2f8;color:var(--ink);border:1px solid #dce3eb;border-radius:7px;font-size:16px}.special button:active{background:#dce7fb}.verb{font-size:13px;color:var(--muted);font-style:italic;margin-left:3px}
+@media(max-width:600px){.group{padding:14px}.item{padding:11px 0}input{width:108px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Indicativo o subjuntivo</h1>
+<p>Completa las frases con la forma adecuada del verbo. Después, pulsa «Comprobar».</p>
+<div class="toolbar">
+<button class="primary" id="check">Comprobar respuestas</button>
+<button class="secondary" id="reset">Borrar respuestas</button>
+<span id="score" aria-live="polite"></span>
+</div>
+</header>
+<div class="special" aria-label="Caracteres especiales"><strong>Caracteres especiales:</strong><button type="button" data-char="á">á</button><button type="button" data-char="é">é</button><button type="button" data-char="í">í</button><button type="button" data-char="ó">ó</button><button type="button" data-char="ú">ú</button><button type="button" data-char="ü">ü</button><button type="button" data-char="ñ">ñ</button><button type="button" data-char="Á">Á</button><button type="button" data-char="É">É</button><button type="button" data-char="Í">Í</button><button type="button" data-char="Ó">Ó</button><button type="button" data-char="Ú">Ú</button><button type="button" data-char="Ñ">Ñ</button><button type="button" data-char="¿">¿</button><button type="button" data-char="¡">¡</button></div>
+<div id="exercise"></div>
+<p class="note">Nota: algunas frases admiten más de una forma según la interpretación. Se aceptan variantes habituales cuando corresponde.</p>
+</div>
+<script>
+const tasks = [
+[1,"Ojalá no ___ mañana, porque tengo muchas ganas de ir a la playa.",["llueva"]],
+[2,"A lo mejor me ___ una bicicleta, estoy harta del coche.",["compro|compraré"]],
+[3,"Quizás ___ mañana un gatito para que le ___ compañía a Loli.",["adopte","haga"]],
+[4,"Quería pedirle que ___ conmigo, pero como era posible que me ___ que no, al final no lo hice.",["saliera|saliese","dijera|dijese"]],
+[6,"Posiblemente ___ tarde, así que no me esperes despierto.",["llegue|llegaré"]],
+[7,"Preferiría que ya no ___; es una traidora.",["volviera","volviese"]],
+[8,"Te recomiendo que ___ más fruta y verdura, son muy buenas.",["comas"]],
+[9,"¡Que ___ bien, amor mío!",["duermas"]],
+[10,"No habéis estudiado nada, dudo que ___ .",["aprobéis"]],
+[11,"Para ___ en la piscina, es necesario ___ .",["entrar","ducharse"]],
+[12,"Lamento que no ___ venir hoy a la fiesta que organizo esta noche.",["puedas"]],
+[13,"Os pido que ___ amables con los demás.",["seáis"]],
+[14,"Te di mi correo electrónico para que me ___ .",["escribieras","escribieses"]],
+[15,"Parece que ___ sueño, estás todo el rato bostezando.",["tienes"]],
+[16,"Te dejo que te ___ el último trozo de tarta, si me ___ descansar toda la noche.",["comas","dejas"]],
+[17,"Con tal de que te ___, te dice a todo que sí.",["calles"]],
+[18,"Estuve ahorrando para ___ algo muy especial.",["regalarle"]],
+[19,"¿No te gustaría encontrar a alguien que te ___ un poco de cariño?",["diera","diese"]],
+[20,"Le iba a comprar un helado para que me ___ de dar la lata.",["dejara","dejase"]],
+[21,"Antes de que ___ nada, tienes que pensarlo dos veces para no ___ el ridículo.",["digas","hacer"]],
+[22,"Buscaba una cosa que me ___ para tapar este agujero en la pared.",["sirviera","sirviese"]],
+[23,"Tan pronto como ___ a alguien, le cuenta la historia de su vida con todo lujo de detalles.",["conoce"]],
+[24,"Me quedaré aquí hasta que se ___ todos los invitados para que por fin ___ hablar tranquilamente.",["vayan","pueda"]],
+[25,"No sé quién ha terminado, pero los que ___, entréguenmelo ya, aunque no seáis todos.",["terminéis"]],
+[26,"Hoy me toca limpiar, pero en cuanto lo ___ todo listo, te llamo y quedamos.",["tenga"]],
+[27,"Cuando ___ su nombre, se puso rojo como un tomate.",["dijo"]],
+[28,"En este concurso solo podrán participar los que no ___ carné de conducir.",["tengan"]],
+[29,"Mientras tú ___ en mi casa, quiero que me ___ .",["estés","obedezcas"]],
+[30,"Necesitaba un par de huevos para ___ la tortilla.",["preparar"]],
+[31,"Quienes ___ con atención la novela, recordarán el episodio de la boda.",["lean|hayan leído"]],
+[32,"Hasta que no ___ él a casa, no pude pegar ojo.",["volvió"]],
+[33,"Es obvio que no ___ ni idea de lo que le estoy diciendo.",["tiene"]],
+[34,"Después de lo que le ha pasado, ¿no te parece normal que ___ preocupada por su hijo?",["esté"]],
+[35,"Es una lástima que no nos ___ en tiempos mejores.",["conociéramos","conociésemos"]],
+[36,"Aquí huele a tabaco. ¿Recuerdas que la semana pasada te prohibí que ___ delante de la niña?",["fumaras","fumases"]],
+[37,"Es un horror que ___ contando todo sobre nuestra relación.",["vayas"]],
+[38,"No pensaba que ___ capaz de hacerlo solo, pero al final lo ha conseguido.",["fuera","fuese"]],
+[39,"Me sorprende que hasta ahora nadie ___ ni una sola palabra.",["haya pronunciado"]],
+[40,"Él opina que ___ posible vivir solo con energía renovable.",["es"]],
+[41,"Hace años lo más fácil era que te ___ por una tontería.",["detuvieran","detuviesen"]],
+[42,"Quiero esa manzana que ___ encima de la mesa.",["está"]],
+[43,"Quería un libro que ___ en español.",["estuviera","estuviese"]],
+[44,"El otro día, mientras ___ por la playa, me acordé de ti.",["paseaba"]],
+[45,"Para la entrevista busco a alguien que no ___ en España en los últimos dos años.",["haya vivido"]],
+[46,"Mientras tú ___ a mi lado, no tendré miedo.",["estés"]],
+[47,"¡Qué raro que ___ frío en esta época del año!",["haga"]],
+[48,"¿Pero no está claro que ___ españoles? ¡Si su acento los delata!",["son"]],
+[49,"Es imposible que ninguno de los vecinos ___ humo o fuego antes de la llegada de los bomberos.",["haya visto"]],
+[50,"Es importantísimo que ___ la basura; el futuro del planeta depende de vosotros.",["recicléis"]],
+[51,"Me gusta escuchar música cuando ___ en bici.",["voy"]],
+[52,"Cuando ___ la comida, avísame y preparo el postre.",["hagas"]],
+[53,"De momento tengo una cosa clara: quiero a alguien que ___ bien el español.",["hable"]]
+];
+const infinitives = ["llover", "comprar", "adoptar / hacer", "salir / decir", "llegar", "volver", "comer", "dormir", "aprobar", "entrar / ducharse", "poder", "ser", "escribir", "tener", "comer / dejar", "callarse", "regalar", "dar", "dejar", "decir / hacer", "servir", "conocer", "irse / poder", "terminar", "tener", "decir", "tener", "estar / obedecer", "preparar", "leer", "volver", "tener", "estar", "conocer", "fumar", "ir", "ser", "pronunciar", "ser", "detener", "estar", "estar", "pasear", "vivir", "estar", "hacer", "ser", "ver", "reciclar", "ir", "hacer", "hablar"];
+const root=document.getElementById('exercise');
+function render(){
+  root.innerHTML='';
+  const groups=[tasks.slice(0,18),tasks.slice(18,36),tasks.slice(36)];
+  let globalIndex=0;
+  groups.forEach((g,gi)=>{
+    const section=document.createElement('section');section.className='group';
+    const first=gi===0?1:gi===1?19:37;
+    const last=first+g.length-1;
+    const h=document.createElement('h2');h.textContent=`${first}–${last}`;section.appendChild(h);
+    g.forEach(([oldNum,s,answers])=>{
+      globalIndex++;
+      const n=globalIndex;
+      const row=document.createElement('div');row.className='item';row.dataset.num=n;
+      const parts=s.split('___');
+      let out=`<span class="num">${n}.</span><span class="verb">(${escapeHtml(infinitives[n-1])})</span> `;
+      for(let i=0;i<parts.length;i++){
+        out+=escapeHtml(parts[i]);
+        if(i<parts.length-1) out+=`<span class="blank"><input aria-label="Respuesta ${n}, espacio ${i+1}" data-answer="${encodeURIComponent((answers[i]||'').replace(/^ /,''))}" data-accepted="${encodeURIComponent((answers[i]||'').trim())}"><span class="feedback"></span></span>`;
+      }
+      row.innerHTML=out;section.appendChild(row);
+    });
+    root.appendChild(section);
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function norm(s){return s.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');}
+function check(){
+ let total=0,good=0;
+ document.querySelectorAll('input').forEach(inp=>{
+   total++;
+   const answers=decodeURIComponent(inp.dataset.answer).split('|').map(norm);
+   const val=norm(inp.value);
+   const fb=inp.parentElement.querySelector('.feedback');
+   inp.classList.remove('correct','incorrect');fb.className='feedback';
+   const ok=answers.includes(norm(inp.value));
+   if(ok){good++;inp.classList.add('correct');fb.textContent='✓';fb.classList.add('ok');}
+   else{inp.classList.add('incorrect');fb.textContent='✗';fb.classList.add('no');}
+ });
+ document.getElementById('score').textContent=`${good} / ${total} respuestas correctas`;
+}
+let activeInput=null;
+document.addEventListener('focusin',e=>{if(e.target.matches('input')) activeInput=e.target;});
+document.querySelectorAll('.special button').forEach(btn=>btn.addEventListener('click',()=>{
+  if(!activeInput) { activeInput=document.querySelector('input'); }
+  if(!activeInput) return;
+  const start=activeInput.selectionStart ?? activeInput.value.length;
+  const end=activeInput.selectionEnd ?? activeInput.value.length;
+  activeInput.value=activeInput.value.slice(0,start)+btn.dataset.char+activeInput.value.slice(end);
+  activeInput.focus();
+  activeInput.setSelectionRange(start+btn.dataset.char.length,start+btn.dataset.char.length);
+}));
+render();
+document.getElementById('check').addEventListener('click',()=>check(false));
+document.getElementById('reset').addEventListener('click',()=>{
+ document.querySelectorAll('input').forEach(i=>{i.value='';i.classList.remove('correct','incorrect');i.parentElement.querySelector('.feedback').textContent='';});
+ document.getElementById('score').textContent='';
+});
+</script>
+</body>
+</html>
