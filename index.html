@@ -10,7 +10,7 @@
 .wrap{max-width:980px;margin:28px auto;padding:0 18px 40px}
 header{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
 h1{font-size:clamp(23px,4vw,32px);margin:0 0 6px}header p{margin:0;color:var(--muted)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:0}
 button{border:0;border-radius:10px;padding:11px 17px;font-weight:650;font-size:15px;cursor:pointer}
 .primary{background:var(--accent);color:white}.secondary{background:#e8edf5;color:var(--ink)}
 #score{align-self:center;color:var(--muted);font-weight:650}
@@ -27,22 +27,25 @@ input.incorrect{border-color:var(--bad);background:#fff0ef}
 .feedback{font-size:13px;margin-left:5px;font-weight:650}
 .feedback.ok{color:var(--good)}.feedback.no{color:var(--bad)}
 .note{font-size:13px;color:var(--muted);margin-top:14px}
-.special{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:14px 0 18px}.special strong{font-size:13px;color:var(--muted);margin-right:4px}.special button{padding:5px 10px;min-width:34px;background:#eef2f8;color:var(--ink);border:1px solid #dce3eb;border-radius:7px;font-size:16px}.special button:active{background:#dce7fb}.verb{font-size:13px;color:var(--muted);font-style:italic;margin-left:3px}
+.floating-panel{position:sticky;top:0;z-index:1000;display:flex;flex-direction:column;gap:8px;padding:10px 0;background:var(--bg)}
+.special{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0}.special strong{font-size:13px;color:var(--muted);margin-right:4px}.special button{padding:5px 10px;min-width:34px;background:#eef2f8;color:var(--ink);border:1px solid #dce3eb;border-radius:7px;font-size:16px}.special button:active{background:#dce7fb}.verb{font-size:13px;color:var(--muted);font-style:italic;margin-left:3px}
 @media(max-width:600px){.group{padding:14px}.item{padding:11px 0}input{width:108px}}
 </style>
 </head>
 <body>
 <div class="wrap">
-<header>
-<h1>Indicativo o subjuntivo</h1>
-<p>Completa las frases con la forma adecuada del verbo. Después, pulsa «Comprobar».</p>
+<div class="floating-panel">
 <div class="toolbar">
 <button class="primary" id="check">Comprobar respuestas</button>
 <button class="secondary" id="reset">Borrar respuestas</button>
 <span id="score" aria-live="polite"></span>
 </div>
-</header>
 <div class="special" aria-label="Caracteres especiales"><strong>Caracteres especiales:</strong><button type="button" data-char="á">á</button><button type="button" data-char="é">é</button><button type="button" data-char="í">í</button><button type="button" data-char="ó">ó</button><button type="button" data-char="ú">ú</button><button type="button" data-char="ü">ü</button><button type="button" data-char="ñ">ñ</button><button type="button" data-char="Á">Á</button><button type="button" data-char="É">É</button><button type="button" data-char="Í">Í</button><button type="button" data-char="Ó">Ó</button><button type="button" data-char="Ú">Ú</button><button type="button" data-char="Ñ">Ñ</button><button type="button" data-char="¿">¿</button><button type="button" data-char="¡">¡</button></div>
+</div>
+<header>
+<h1>Indicativo o subjuntivo</h1>
+<p>Completa las frases con la forma adecuada del verbo. Después, pulsa «Comprobar».</p>
+</header>
 <div id="exercise"></div>
 <p class="note">Nota: algunas frases admiten más de una forma según la interpretación. Se aceptan variantes habituales cuando corresponde.</p>
 </div>
